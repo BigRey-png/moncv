@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mon CV Professionnel</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f0f0f0;font-size:14px;color:#222}
+#welcome{position:fixed;inset:0;background:#1a1a2e;z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;text-align:center}
+#welcome h1{color:#c9a84c;font-size:22px;margin-bottom:10px}
+#welcome p{color:rgba(255,255,255,0.8);font-size:13px;line-height:1.7;margin-bottom:28px}
+#welcome ul{color:rgba(255,255,255,0.7);font-size:12px;text-align:left;margin-bottom:28px;line-height:2;list-style:none}
+#welcome ul li::before{content:"✅ ";color:#c9a84c}
+#startBtn{background:#c9a84c;color:#1a1a2e;border:none;border-radius:25px;padding:14px 40px;font-size:15px;font-weight:bold;cursor:pointer;width:100%;max-width:300px}
+#topbar{background:#1a1a2e;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:98}
+#topbar-title{color:#c9a84c;font-weight:bold;font-size:13px}
+#topbar-btns{display:flex;gap:8px}
+.tbtn{border:none;border-radius:20px;padding:7px 14px;font-size:12px;font-weight:bold;cursor:pointer}
+#btnEdit{background:#c9a84c;color:#1a1a2e}
+#btnPdf{background:transparent;border:1px solid #c9a84c;color:#c9a84c}
+#cv-header{background:#1a1a2e;padding:20px 16px 18px;border-bottom:4px solid #c9a84c}
+#header-inner{display:flex;gap:14px;align-items:flex-start}
+#photo-wrap{position:relative;width:76px;height:76px;flex-shrink:0}
+#photo-circle{width:76px;height:76px;border-radius:50%;border:3px solid #c9a84c;overflow:hidden;background:#2a2a4a;display:flex;align-items:center;justify-content:center;cursor:pointer}
+#photo-circle img{width:100%;height:100%;object-fit:cover;display:none}
+#photo-icon{font-size:34px;color:#c9a84c}
+#photo-badge{position:absolute;bottom:0;right:0;background:#c9a84c;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;border:2px solid #1a1a2e}
+#photoFile{display:none}
+#header-info{flex:1;min-width:0}
+.h-name{color:#fff;font-size:16px;font-weight:bold;line-height:1.2;word-break:break-word}
+.h-title{color:#c9a84c;font-size:11px;margin-top:4px;letter-spacing:0.5px}
+.h-contact{color:rgba(255,255,255,0.85);font-size:11px;margin-top:4px;display:flex;gap:5px;align-items:flex-start;word-break:break-all}
+.h-contact .ico{color:#c9a84c;flex-shrink:0}
+#tabs{display:flex;background:#fff;border-bottom:1px solid #ddd}
+.tab{flex:1;padding:11px 2px;text-align:center;font-size:11px;font-weight:bold;color:#999;background:transparent;border:none;border-bottom:3px solid transparent;cursor:pointer}
+.tab.on{color:#2e4a7a;border-bottom:3px solid #c9a84c}
+.page{display:none;padding:16px 14px 70px;max-width:720px;margin:0 auto}
+.page.on{display:block}
+.sec{margin-bottom:20px}
+.sec-t{font-size:11px;font-weight:bold;color:#2e4a7a;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #c9a84c;padding-bottom:5px;margin-bottom:12px}
+.txt{font-size:13px;color:#333;line-height:1.7}
+.tags{display:flex;flex-wrap:wrap;gap:7px}
+.tag{background:#1a1a2e;color:#c9a84c;border-radius:20px;padding:5px 12px;font-size:11px;font-weight:bold}
+.tag-light{background:#e8e4dc;color:#2e4a7a;border-radius:20px;padding:5px 12px;font-size:11px;font-weight:bold}
+.tag-green{background:#e8f4ec;color:#1a5c2e;border-radius:20px;padding:5px 12px;font-size:11px;font-weight:bold}
+.l-name{font-size:12px;font-weight:bold;color:#1a1a2e;margin-bottom:3px}
+.lbar{height:6px;background:#ddd;border-radius:3px}
+.lfill{height:100%;border-radius:3px;background:linear-gradient(90deg,#2e4a7a,#c9a84c)}
+.exp{border-left:3px solid #c9a84c;padding-left:12px;margin-bottom:16px}
+.e-period{font-size:10px;color:#999;font-weight:bold}
+.e-co{font-size:13px;font-weight:bold;color:#1a1a2e}
+.e-role{font-size:11px;color:#2e4a7a;font-weight:bold;margin-bottom:5px}
+.e-task{font-size:12px;color:#444;padding-left:14px;position:relative;margin-bottom:3px;line-height:1.5}
+.e-task::before{content:"▸";position:absolute;left:0;color:#c9a84c}
+.edu{margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid #eee}
+.edu-d{font-size:12px;font-weight:bold;color:#1a1a2e}
+.edu-s{font-size:11px;color:#999}
+.ref{background:#f9f7f2;border:1px solid #e5e2d8;border-radius:8px;padding:12px;margin-bottom:10px}
+.r-name{font-size:13px;font-weight:bold;color:#1a1a2e}
+.r-role{font-size:11px;color:#999}
+.r-tel{font-size:11px;color:#2e4a7a;margin-top:2px}
+.e[contenteditable="true"]{border:1.5px dashed #c9a84c;border-radius:4px;padding:3px 5px;background:rgba(201,168,76,0.08);outline:none;min-height:18px;display:inline-block;width:100%}
+.e[contenteditable="true"]:focus{background:rgba(201,168,76,0.15)}
+.e{display:inline-block;width:100%}
+.add-row{display:none;margin-top:10px}
+.add-row.show{display:flex;gap:8px;flex-wrap:wrap}
+.abtn{background:transparent;border:1.5px dashed #c9a84c;color:#c9a84c;font-size:12px;border-radius:8px;padding:8px 14px;cursor:pointer;flex:1}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) scale(0.9);background:#1a1a2e;color:#c9a84c;padding:10px 20px;border-radius:20px;font-size:13px;z-index:999;opacity:0;transition:all 0.3s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,0.3)}
+#toast.show{opacity:1;transform:translateX(-50%) scale(1)}
+@media print{#welcome,#topbar,#tabs,.add-row,#toast,#photo-badge{display:none!important}.page{display:block!important;padding:0}body{background:#fff}}
+</style>
+</head>
+<body>
+<div id="welcome">
+  <h1>📄 Créateur de CV</h1>
+  <p>Bienvenue ! Créez votre CV professionnel en quelques minutes, directement depuis votre téléphone.</p>
+  <ul>
+    <li>Ajoutez votre photo depuis la galerie</li>
+    <li>Remplissez chaque champ facilement</li>
+    <li>Partagez ou imprimez votre CV</li>
+    <li>Fonctionne sans internet</li>
+  </ul>
+  <button id="startBtn" onclick="startApp()">🚀 Commencer mon CV</button>
+</div>
+<div id="app" style="display:none">
+<div id="topbar">
+  <span id="topbar-title">📄 Mon CV</span>
+  <div id="topbar-btns">
+    <button class="tbtn" id="btnEdit" onclick="toggleEdit()">✏️ Modifier</button>
+    <button class="tbtn" id="btnPdf" onclick="window.print()">🖨️ PDF</button>
+  </div>
+</div>
+<div id="cv-header">
+  <div id="header-inner">
+    <div id="photo-wrap">
+      <div id="photo-circle" onclick="document.getElementById('photoFile').click()">
+        <img id="photo-img" src="" alt="photo">
+        <span id="photo-icon">👤</span>
+      </div>
+      <div id="photo-badge" onclick="document.getElementById('photoFile').click()">📷</div>
+      <input type="file" id="photoFile" accept="image/*" onchange="loadPhoto(event)">
+    </div>
+    <div id="header-info">
+      <div class="h-name e" contenteditable="false">Votre Nom Complet</div>
+      <div class="h-title e" contenteditable="false">Votre métier / titre professionnel</div>
+      <div class="h-contact"><span class="ico">📍</span><span class="e" contenteditable="false">Votre ville, pays</span></div>
+      <div class="h-contact"><span class="ico">📞</span><span class="e" contenteditable="false">+XXX XX XX XX XX</span></div>
+      <div class="h-contact"><span class="ico">✉️</span><span class="e" contenteditable="false">votre@email.com</span></div>
+    </div>
+  </div>
+</div>
+<div id="tabs">
+  <button class="tab on" onclick="goTab(0,this)">👤 Profil</button>
+  <button class="tab" onclick="goTab(1,this)">💼 Expér.</button>
+  <button class="tab" onclick="goTab(2,this)">🎓 Form.</button>
+  <button class="tab" onclick="goTab(3,this)">🤝 Refs</button>
+</div>
+<div class="page on" id="p0">
+  <div class="sec">
+    <div class="sec-t">🎯 Objectif professionnel</div>
+    <div class="txt e" contenteditable="false">Décrivez votre objectif professionnel en quelques lignes.</div>
+  </div>
+  <div class="sec">
+    <div class="sec-t">👤 À propos de moi</div>
+    <div class="txt e" contenteditable="false">Présentez votre parcours, vos points forts et ce qui vous distingue.</div>
+  </div>
+  <div class="sec">
+    <div class="sec-t">⚙️ Compétences</div>
+    <div class="tags" id="skills-wrap">
+      <span class="tag e" contenteditable="false">Compétence 1</span>
+      <span class="tag e" contenteditable="false">Compétence 2</span>
+      <span class="tag e" contenteditable="false">Compétence 3</span>
+    </div>
+    <div class="add-row" id="add-skill-row"><button class="abtn" onclick="addSkill()">+ Compétence</button></div>
+  </div>
+  <div class="sec">
+    <div class="sec-t">🌐 Langues</div>
+    <div style="margin-bottom:10px"><div class="l-name e" contenteditable="false">Langue 1 — Niveau</div><div class="lbar"><div class="lfill" style="width:80%"></div></div></div>
+    <div><div class="l-name e" contenteditable="false">Langue 2 — Niveau</div><div class="lbar"><div class="lfill" style="width:50%"></div></div></div>
+  </div>
+  <div class="sec">
+    <div class="sec-t">💻 Outils & Logiciels</div>
+    <div class="tags" id="tools-wrap">
+      <span class="tag-light e" contenteditable="false">Outil 1</span>
+      <span class="tag-light e" contenteditable="false">Outil 2</span>
+      <span class="tag-light e" contenteditable="false">Outil 3</span>
+    </div>
+    <div class="add-row" id="add-tool-row"><button class="abtn" onclick="addTool()">+ Outil</button></div>
+  </div>
+</div>
+<div class="page" id="p1">
+  <div class="sec">
+    <div class="sec-t">💼 Expériences Professionnelles</div>
+    <div id="exp-wrap">
+      <div class="exp">
+        <div class="e-period e" contenteditable="false">Date début – Date fin</div>
+        <div class="e-co e" contenteditable="false">Nom de l'entreprise</div>
+        <div class="e-role e" contenteditable="false">Poste occupé</div>
+        <div class="e-task e" contenteditable="false">Description de vos responsabilités</div>
+        <div class="e-task e" contenteditable="false">Autre accomplissement notable</div>
+      </div>
+      <div class="exp">
+        <div class="e-period e" contenteditable="false">Date début – Date fin</div>
+        <div class="e-co e" contenteditable="false">Nom de l'entreprise</div>
+        <div class="e-role e" contenteditable="false">Poste occupé</div>
+        <div class="e-task e" contenteditable="false">Description de vos responsabilités</div>
+      </div>
+    </div>
+    <div class="add-row" id="add-exp-row"><button class="abtn" onclick="addExp()">+ Expérience</button></div>
+  </div>
+</div>
+<div class="page" id="p2">
+  <div class="sec">
+    <div class="sec-t">🎓 Formations & Diplômes</div>
+    <div id="edu-wrap">
+      <div class="edu"><div class="edu-d e" contenteditable="false">Nom du diplôme</div><div class="edu-s e" contenteditable="false">Établissement — Année</div></div>
+      <div class="edu"><div class="edu-d e" contenteditable="false">Nom du diplôme</div><div class="edu-s e" contenteditable="false">Établissement — Année</div></div>
+    </div>
+    <div class="add-row" id="add-edu-row"><button class="abtn" onclick="addEdu()">+ Formation</button></div>
+  </div>
+  <div class="sec">
+    <div class="sec-t">🏆 Qualités personnelles</div>
+    <div class="tags">
+      <span class="tag-green e" contenteditable="false">Qualité 1</span>
+      <span class="tag-green e" contenteditable="false">Qualité 2</span>
+      <span class="tag-green e" contenteditable="false">Qualité 3</span>
+      <span class="tag-green e" contenteditable="false">Qualité 4</span>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sec-t">📋 Informations Personnelles</div>
+    <table style="font-size:12px;color:#444;width:100%;border-collapse:collapse">
+      <tr><td style="padding:5px 0;width:40%;color:#999">🎂 Naissance</td><td class="e" contenteditable="false">JJ/MM/AAAA</td></tr>
+      <tr><td style="padding:5px 0;color:#999">🚗 Permis</td><td class="e" contenteditable="false">Catégorie</td></tr>
+      <tr><td style="padding:5px 0;color:#999">📌 Adresse</td><td class="e" contenteditable="false">Votre adresse</td></tr>
+    </table>
+  </div>
+</div>
+<div class="page" id="p3">
+  <div class="sec">
+    <div class="sec-t">🤝 Références professionnelles</div>
+    <div id="ref-wrap">
+      <div class="ref"><div class="r-name e" contenteditable="false">Nom Prénom</div><div class="r-role e" contenteditable="false">Fonction — Entreprise</div><div class="r-tel e" contenteditable="false">📞 +XXX XX XX XX XX</div></div>
+      <div class="ref"><div class="r-name e" contenteditable="false">Nom Prénom</div><div class="r-role e" contenteditable="false">Fonction — Entreprise</div><div class="r-tel e" contenteditable="false">📞 +XXX XX XX XX XX</div></div>
+    </div>
+    <div class="add-row" id="add-ref-row"><button class="abtn" onclick="addRef()">+ Référence</button></div>
+  </div>
+  <p style="text-align:center;font-size:11px;color:#bbb;margin-top:30px">CV créé avec Mon CV Pro</p>
+</div>
+</div>
+<div id="toast"></div>
+<script>
+var editing=false;
+function startApp(){document.getElementById('welcome').style.display='none';document.getElementById('app').style.display='block';toast('👋 Appuyez sur ✏️ Modifier pour remplir votre CV');}
+function goTab(idx,btn){var pages=document.querySelectorAll('.page');var tabs=document.querySelectorAll('.tab');for(var i=0;i<pages.length;i++)pages[i].classList.remove('on');for(var i=0;i<tabs.length;i++)tabs[i].classList.remove('on');document.getElementById('p'+idx).classList.add('on');btn.classList.add('on');}
+function toggleEdit(){editing=!editing;var btn=document.getElementById('btnEdit');var fields=document.querySelectorAll('.e');var addRows=document.querySelectorAll('.add-row');if(editing){fields.forEach(function(f){f.contentEditable='true';});addRows.forEach(function(r){r.classList.add('show');});btn.textContent='✅ Terminer';btn.style.background='#27ae60';btn.style.color='#fff';toast('✏️ Appuyez sur un texte pour modifier');}else{fields.forEach(function(f){f.contentEditable='false';});addRows.forEach(function(r){r.classList.remove('show');});btn.textContent='✏️ Modifier';btn.style.background='#c9a84c';btn.style.color='#1a1a2e';toast('✅ CV mis à jour !');}}
+function loadPhoto(e){var file=e.target.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(ev){var img=document.getElementById('photo-img');img.src=ev.target.result;img.style.display='block';document.getElementById('photo-icon').style.display='none';toast('📷 Photo ajoutée !');};reader.readAsDataURL(file);}
+function toast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2800);}
+function addSkill(){var s=prompt('Nom de la compétence :');if(!s)return;var span=document.createElement('span');span.className='tag e';span.contentEditable=editing?'true':'false';span.textContent=s;document.getElementById('skills-wrap').appendChild(span);}
+function addTool(){var s=prompt('Nom de l\'outil :');if(!s)return;var span=document.createElement('span');span.className='tag-light e';span.contentEditable=editing?'true':'false';span.textContent=s;document.getElementById('tools-wrap').appendChild(span);}
+function addExp(){var wrap=document.getElementById('exp-wrap');var d=document.createElement('div');d.className='exp';d.innerHTML='<div class="e-period e" contenteditable="true">Date début – Date fin</div><div class="e-co e" contenteditable="true">Nom de l\'entreprise</div><div class="e-role e" contenteditable="true">Poste occupé</div><div class="e-task e" contenteditable="true">Décrivez vos responsabilités</div>';wrap.appendChild(d);d.querySelector('.e-co').focus();}
+function addEdu(){var wrap=document.getElementById('edu-wrap');var d=document.createElement('div');d.className='edu';d.innerHTML='<div class="edu-d e" contenteditable="true">Nom du diplôme</div><div class="edu-s e" contenteditable="true">Établissement — Année</div>';wrap.appendChild(d);d.querySelector('.edu-d').focus();}
+function addRef(){var wrap=document.getElementById('ref-wrap');var d=document.createElement('div');d.className='ref';d.innerHTML='<div class="r-name e" contenteditable="true">Nom Prénom</div><div class="r-role e" contenteditable="true">Fonction — Entreprise</div><div class="r-tel e" contenteditable="true">📞 Numéro</div>';wrap.appendChild(d);d.querySelector('.r-name').focus();}
+</script>
+</body>
+</html>
